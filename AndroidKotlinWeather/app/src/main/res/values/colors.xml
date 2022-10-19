@@ -11,10 +11,9 @@
     <color name="light_blue_600">#FF039BE5</color>
     <color name="gray_400">#FFBDBDBD</color>
     <color name="gray_600">#FF757575</color>
-    <color name="black_80">#000000CC</color>
-    <color name="black_60">#00000099</color>
-    <color name="black_20">#00000033</color>
+    <color name="black_80">#CC000000</color>
+    <color name="black_60">#99000000</color>
+    <color name="black_20">#33000000</color>
     <color name="white_80">#CCFFFFFF</color>
     <color name="white_50">#80FFFFFF</color>
-    <color name="white_20">#FFFFFF33</color>
 </resources>

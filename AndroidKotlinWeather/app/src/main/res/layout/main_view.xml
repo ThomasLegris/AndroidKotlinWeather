@@ -1,4 +1,5 @@
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -9,59 +10,62 @@
     <TextView
         android:id="@+id/temp_text"
         tools:text="24°"
-        android:textSize="24sp"
+        android:textSize="@dimen/title_text_size"
         android:layout_width="wrap_content"
         android:layout_height="48sp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toEndOf="@id/thermometer_image_view"
-        android:layout_margin="12sp"
-        />
+        android:layout_margin="@dimen/small_margin"/>
 
     <ImageView
         android:id="@+id/thermometer_image_view"
-        android:layout_width="48sp"
-        android:layout_height="48sp"
+        android:layout_width="@dimen/high_margin"
+        android:layout_height="@dimen/high_margin"
         android:src="@drawable/ic_thermometer"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:layout_margin="12sp"/>
-    
+        android:layout_margin="@dimen/small_margin"/>
+
     <ImageView
         android:id="@+id/weather_image_view"
         android:layout_width="wrap_content"
-        android:layout_height="80sp"
+        android:layout_height="96sp"
         tools:src = "@drawable/ic_fog"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        />
+        app:layout_constraintEnd_toEndOf="parent"/>
+
     <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="24sp"
+        android:layout_height="@dimen/title_text_size"
         android:orientation="horizontal"
-        android:layout_margin="24sp"
+        android:layout_marginVertical="@dimen/high_margin"
+        android:layout_marginHorizontal="@dimen/normal_margin"
         app:layout_constraintTop_toBottomOf="@id/weather_image_view"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
+
         <TextView
             android:id="@+id/weather_description_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             tools:text="Rain"
-            android:layout_marginEnd="12sp"
-            android:textSize="14sp"/>
+            android:layout_marginEnd="@dimen/small_margin"
+            android:textSize="@dimen/desc_text_size"/>
+
         <View
             android:layout_width="1sp"
             android:layout_height="match_parent"
             android:background="@color/gray_600"/>
+
         <TextView
             android:id="@+id/date_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="12sp"
+            android:layout_marginStart="@dimen/small_margin"
             tools:text="12.10.2022"
-            android:textSize="14sp"/>
+            android:textSize="@dimen/desc_text_size"/>
 
     </LinearLayout>
 

@@ -1,11 +1,12 @@
 package com.example.androidkotlinweather
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import androidx.appcompat.app.AppCompatActivity
+import com.example.androidkotlinweather.api.ApiManager.requestWeather
 import com.example.androidkotlinweather.models.LocalWeatherResponse
-import com.example.androidkotlinweather.models.WeatherGroup
-import com.example.androidkotlinweather.models.WeatherService
+import com.example.androidkotlinweather.prefs.SharedPrefManager
+import com.example.androidkotlinweather.api.WeatherService
 import com.example.androidkotlinweather.models.getWeatherGroup
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.main_view.view.*
@@ -14,14 +15,14 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import java.text.SimpleDateFormat
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-import java.util.*
 
+/// Main entry of the app.
+/// Screen used to search city by its name.
 class MainActivity : AppCompatActivity() {
     /**
-     ** Override Funcs
+     * Override Funcs
      **/
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,52 +32,37 @@ class MainActivity : AppCompatActivity() {
     }
 
     /**
-     ** Private Funcs
+     * Private Funcs
      **/
     private fun initView() {
         city_request_button.setOnClickListener {
             didClickOnCityRequest()
         }
+        requestWeather(SharedPrefManager.getLastCity(this)) { response -> updateView(response)}
         setupDate()
     }
 
+
     /// Called when user has clicked on search button to find weather by its cityname.
     private fun didClickOnCityRequest() {
-        val retrofit = Retrofit.Builder()
-            .baseUrl("https://api.openweathermap.org/data/2.5/")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-        val apiWeatherService = retrofit.create(WeatherService::class.java)
-
-        apiWeatherService.getWeather(
-            "5eb5a01a0f1829cf671e3fd56c7ccdc6",
-            "metric",
-            city_field_edit_text.text.toString()
-        ).enqueue(object : Callback<LocalWeatherResponse> {
-            override fun onResponse(
-                call: Call<LocalWeatherResponse>,
-                response: Response<LocalWeatherResponse>
-            ) {
-                response.body()?.let { data ->
-                    main_weather_view.apply {
-                        temp_text.text = data.main.temp.toString()
-                        city_name_text.text = data.name
-                        weather_description_text.text = data.weather?.first()?.main.toString()
-                        weather_image_view.setImageResource(getWeatherGroup(data.weather?.first()?.identifier).imageRes)
-                    }
-                }
-            }
-
-            override fun onFailure(call: Call<LocalWeatherResponse>, t: Throwable) {
-                Log.e("API_ERROR", "Error occured at API call: $t")
-            }
-        }
-        )
+        requestWeather(city_field_edit_text.text.toString()) { response -> updateView(response)}
     }
 
+    private fun updateView(response: LocalWeatherResponse) {
+        main_weather_view.apply {
+            temp_text.text = response.main.temp.toString()
+            city_name_text.text = response.name
+            weather_description_text.text = response.weather?.first()?.main.toString()
+            weather_image_view.setImageResource(getWeatherGroup(response.weather?.first()?.identifier).imageRes)
+        }
+
+        /// Save this city in shared pref.
+        SharedPrefManager.updateLastCity(this@MainActivity, response.name)
+    }
+
+    /// Setting up the current date time.
     private fun setupDate() {
         val current = LocalDateTime.now()
-
         val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
         val formatted = current.format(formatter)
 
