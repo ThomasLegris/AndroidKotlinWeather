@@ -1,0 +1,68 @@
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:id="@+id/main_view"
+    android:background="@drawable/layout_weather_widget_bg"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/temp_text"
+        tools:text="24°"
+        android:textSize="24sp"
+        android:layout_width="wrap_content"
+        android:layout_height="48sp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toEndOf="@id/thermometer_image_view"
+        android:layout_margin="12sp"
+        />
+
+    <ImageView
+        android:id="@+id/thermometer_image_view"
+        android:layout_width="48sp"
+        android:layout_height="48sp"
+        android:src="@drawable/ic_thermometer"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_margin="12sp"/>
+    
+    <ImageView
+        android:id="@+id/weather_image_view"
+        android:layout_width="wrap_content"
+        android:layout_height="80sp"
+        tools:src = "@drawable/ic_fog"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        />
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="24sp"
+        android:orientation="horizontal"
+        android:layout_margin="24sp"
+        app:layout_constraintTop_toBottomOf="@id/weather_image_view"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+        <TextView
+            android:id="@+id/weather_description_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="Rain"
+            android:layout_marginEnd="12sp"
+            android:textSize="14sp"/>
+        <View
+            android:layout_width="1sp"
+            android:layout_height="match_parent"
+            android:background="@color/gray_600"/>
+        <TextView
+            android:id="@+id/date_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12sp"
+            tools:text="12.10.2022"
+            android:textSize="14sp"/>
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
