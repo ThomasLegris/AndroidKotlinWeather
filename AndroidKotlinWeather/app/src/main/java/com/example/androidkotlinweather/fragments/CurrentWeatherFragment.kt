@@ -1,32 +1,35 @@
-package com.example.androidkotlinweather
+package com.example.androidkotlinweather.fragments
 
+import ViewPagerFragment
 import android.os.Bundle
-import android.util.Log
-import androidx.appcompat.app.AppCompatActivity
-import com.example.androidkotlinweather.api.ApiManager.requestWeather
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import com.example.androidkotlinweather.R
+import com.example.androidkotlinweather.api.ApiManager
 import com.example.androidkotlinweather.models.LocalWeatherResponse
-import com.example.androidkotlinweather.prefs.SharedPrefManager
-import com.example.androidkotlinweather.api.WeatherService
 import com.example.androidkotlinweather.models.getWeatherGroup
-import kotlinx.android.synthetic.main.activity_main.*
+import com.example.androidkotlinweather.prefs.SharedPrefManager
+import kotlinx.android.synthetic.main.fragment_current_weather.*
 import kotlinx.android.synthetic.main.main_view.view.*
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
-/// Main entry of the app.
-/// Screen used to search city by its name.
-class MainActivity : AppCompatActivity() {
+/// Screen to show weather by city name.
+class CurrentWeatherFragment(title: String) : ViewPagerFragment(title) {
     /**
      * Override Funcs
      **/
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        // Inflate the layout for this fragment
+        return inflater.inflate(R.layout.fragment_current_weather, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         initView()
     }
@@ -38,14 +41,24 @@ class MainActivity : AppCompatActivity() {
         city_request_button.setOnClickListener {
             didClickOnCityRequest()
         }
-        requestWeather(SharedPrefManager.getLastCity(this)) { response -> updateView(response)}
+
+        this.context?.let {
+            ApiManager.requestWeather(SharedPrefManager.getLastCity(it)) { response ->
+                updateView(response)
+            }
+        }
+
         setupDate()
     }
 
 
     /// Called when user has clicked on search button to find weather by its cityname.
     private fun didClickOnCityRequest() {
-        requestWeather(city_field_edit_text.text.toString()) { response -> updateView(response)}
+        ApiManager.requestWeather(city_field_edit_text.text.toString()) { response ->
+            updateView(
+                response
+            )
+        }
     }
 
     private fun updateView(response: LocalWeatherResponse) {
@@ -56,8 +69,10 @@ class MainActivity : AppCompatActivity() {
             weather_image_view.setImageResource(getWeatherGroup(response.weather?.first()?.identifier).imageRes)
         }
 
-        /// Save this city in shared pref.
-        SharedPrefManager.updateLastCity(this@MainActivity, response.name)
+        this.context?.let {
+            /// Save this city in shared pref.
+            SharedPrefManager.updateLastCity(it, response.name)
+        }
     }
 
     /// Setting up the current date time.
