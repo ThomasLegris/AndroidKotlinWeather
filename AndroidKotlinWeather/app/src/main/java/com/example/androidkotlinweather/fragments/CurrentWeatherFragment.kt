@@ -1,22 +1,40 @@
 package com.example.androidkotlinweather.fragments
 
-import ViewPagerFragment
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.lifecycleScope
 import com.example.androidkotlinweather.R
 import com.example.androidkotlinweather.api.ApiManager
+import com.example.androidkotlinweather.fragments.common.CustomPagerFragment
 import com.example.androidkotlinweather.models.LocalWeatherResponse
 import com.example.androidkotlinweather.models.getWeatherGroup
+import com.example.androidkotlinweather.persistance.FavoriteCity
+import com.example.androidkotlinweather.persistance.PersistenceManager
 import com.example.androidkotlinweather.prefs.SharedPrefManager
 import kotlinx.android.synthetic.main.fragment_current_weather.*
 import kotlinx.android.synthetic.main.main_view.view.*
+import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 /// Screen to show weather by city name.
-class CurrentWeatherFragment(title: String) : ViewPagerFragment(title) {
+class CurrentWeatherFragment(title: String) : CustomPagerFragment(title) {
+    /**
+     * Private Properties
+     **/
+    private lateinit var persistenceManager: PersistenceManager
+    private val cityName: String
+        get() {
+            var name = city_field_edit_text.text.toString()
+            if (name.isEmpty()) {
+                /// In case the search field is empty, set the last city searched (store in user pref).
+                name = context?.let { SharedPrefManager.getLastCity(it) }.toString()
+            }
+            return name
+        }
+
     /**
      * Override Funcs
      **/
@@ -38,8 +56,21 @@ class CurrentWeatherFragment(title: String) : ViewPagerFragment(title) {
      * Private Funcs
      **/
     private fun initView() {
+        this.context?.let {
+            persistenceManager = PersistenceManager.sharedInstance(it)
+            persistenceManager.citiesLiveData()
+                ?.observe(this@CurrentWeatherFragment.viewLifecycleOwner) { city ->
+                    println("test live data = $city")
+                }
+        }
+
         city_request_button.setOnClickListener {
             didClickOnCityRequest()
+        }
+
+        favorite_button.setOnClickListener {
+            addOrRemoveToFavorite()
+            updateFavoriteImage()
         }
 
         this.context?.let {
@@ -49,8 +80,8 @@ class CurrentWeatherFragment(title: String) : ViewPagerFragment(title) {
         }
 
         setupDate()
+        updateFavoriteImage()
     }
-
 
     /// Called when user has clicked on search button to find weather by its cityname.
     private fun didClickOnCityRequest() {
@@ -69,6 +100,8 @@ class CurrentWeatherFragment(title: String) : ViewPagerFragment(title) {
             weather_image_view.setImageResource(getWeatherGroup(response.weather?.first()?.identifier).imageRes)
         }
 
+        updateFavoriteImage()
+
         this.context?.let {
             /// Save this city in shared pref.
             SharedPrefManager.updateLastCity(it, response.name)
@@ -82,5 +115,33 @@ class CurrentWeatherFragment(title: String) : ViewPagerFragment(title) {
         val formatted = current.format(formatter)
 
         main_weather_view.date_text.text = formatted.toString()
+    }
+
+    /// Update a city by adding it or removing it in favorites list.
+    private fun addOrRemoveToFavorite() {
+        val name = city_name_text.text.toString()
+        if (name.isNotEmpty()) {
+            lifecycleScope.launch {
+                val city = FavoriteCity(name)
+                if (persistenceManager.cities().contains(city)) {
+                    persistenceManager.deleteCity(city)
+                } else {
+                    persistenceManager.addCity(city)
+                }
+                updateFavoriteImage()
+            }
+        }
+    }
+
+    private fun updateFavoriteImage() {
+        lifecycleScope.launch {
+            if (persistenceManager.cities()
+                    .contains(FavoriteCity(city_name_text.text.toString()))
+            ) {
+                favorite_button.setImageResource(R.drawable.ic_favorite_on)
+            } else {
+                favorite_button.setImageResource(R.drawable.ic_favorite_off)
+            }
+        }
     }
 }

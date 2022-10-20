@@ -32,13 +32,24 @@
     <TextView
         android:id="@+id/city_name_text"
         android:layout_width="0dp"
-        android:layout_height="@dimen/high_margin"
+        android:layout_height="wrap_content"
         android:textSize="@dimen/title_text_size"
-        app:layout_constraintBottom_toTopOf="@id/main_weather_view"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintWidth_percent="0.75"
+        app:layout_constraintTop_toTopOf="@id/favorite_button"
+        app:layout_constraintBottom_toBottomOf="@id/favorite_button"
+        app:layout_constraintEnd_toEndOf="@id/main_weather_view"
+        app:layout_constraintStart_toEndOf="@id/favorite_button"
         tools:text="London" />
+
+    <ImageButton
+        android:id="@+id/favorite_button"
+        android:layout_width="@dimen/high_margin"
+        android:layout_height="@dimen/high_margin"
+        android:src="@drawable/ic_favorite_on"
+        android:scaleType="fitCenter"
+        android:backgroundTint="#00000000"
+        app:layout_constraintBottom_toTopOf="@id/main_weather_view"
+        app:layout_constraintStart_toStartOf="@id/main_weather_view"
+        app:layout_constraintEnd_toStartOf="@id/city_name_text"/>
 
     <include
         android:id="@+id/main_weather_view"
