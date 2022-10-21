@@ -26,7 +26,6 @@ object ApiManager {
             .addConverterFactory(GsonConverterFactory.create())
             .build()
         val apiWeatherService = retrofit.create(WeatherService::class.java)
-
         apiWeatherService.getWeather(apiKey, units, cityName)
             .enqueue(object : Callback<LocalWeatherResponse> {
                 override fun onResponse(

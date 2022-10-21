@@ -25,15 +25,6 @@ class CurrentWeatherFragment(title: String) : CustomPagerFragment(title) {
      * Private Properties
      **/
     private lateinit var persistenceManager: PersistenceManager
-    private val cityName: String
-        get() {
-            var name = city_field_edit_text.text.toString()
-            if (name.isEmpty()) {
-                /// In case the search field is empty, set the last city searched (store in user pref).
-                name = context?.let { SharedPrefManager.getLastCity(it) }.toString()
-            }
-            return name
-        }
 
     /**
      * Override Funcs
@@ -58,10 +49,6 @@ class CurrentWeatherFragment(title: String) : CustomPagerFragment(title) {
     private fun initView() {
         this.context?.let {
             persistenceManager = PersistenceManager.sharedInstance(it)
-            persistenceManager.citiesLiveData()
-                ?.observe(this@CurrentWeatherFragment.viewLifecycleOwner) { city ->
-                    println("test live data = $city")
-                }
         }
 
         city_request_button.setOnClickListener {

@@ -3,4 +3,6 @@
     <string name="search">Search</string>
     <string name="current_weather_fragment_title">Weather</string>
     <string name="cities_fragment_title">Cities</string>
+    <string name="empty_cities_list">Empty favorite cities list</string>
+
 </resources>
