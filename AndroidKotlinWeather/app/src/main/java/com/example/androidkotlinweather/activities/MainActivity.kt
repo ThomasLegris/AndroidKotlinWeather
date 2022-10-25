@@ -3,10 +3,10 @@ package com.example.androidkotlinweather.activities
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.example.androidkotlinweather.R
-import com.example.androidkotlinweather.fragments.CurrentWeatherFragment
-import com.example.androidkotlinweather.fragments.FavoriteCitiesFragment
-import com.example.androidkotlinweather.fragments.adapter.ViewPagerAdapter
-import com.example.androidkotlinweather.fragments.common.CustomPagerFragment
+import com.example.androidkotlinweather.ui.fragments.CurrentWeatherFragment
+import com.example.androidkotlinweather.ui.fragments.FavoriteCitiesFragment
+import com.example.androidkotlinweather.ui.adapter.ViewPagerAdapter
+import com.example.androidkotlinweather.ui.common.CustomPagerFragment
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.android.synthetic.main.activity_main.*
 

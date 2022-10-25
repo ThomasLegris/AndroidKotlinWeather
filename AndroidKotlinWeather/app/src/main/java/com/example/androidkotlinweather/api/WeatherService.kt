@@ -2,6 +2,7 @@ package com.example.androidkotlinweather.api
 
 import com.example.androidkotlinweather.models.LocalWeatherResponse
 import retrofit2.Call
+import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query
 
@@ -10,9 +11,9 @@ import retrofit2.http.Query
  **/
 interface WeatherService {
     @GET("weather")
-    fun getWeather(
+    suspend fun getWeather(
         @Query("appid") keyParam: String,
         @Query("units") unitsParam: String,
         @Query("q") cityParam: String
-    ): Call<LocalWeatherResponse>
+    ): Response<LocalWeatherResponse>
 }

@@ -1,4 +1,4 @@
-package com.example.androidkotlinweather.fragments.adapter
+package com.example.androidkotlinweather.ui.adapter
 
 import android.view.LayoutInflater
 import android.view.View

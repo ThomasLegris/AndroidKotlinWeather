@@ -1,4 +1,4 @@
-package com.example.androidkotlinweather.fragments
+package com.example.androidkotlinweather.ui.fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -6,13 +6,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.lifecycleScope
 import com.example.androidkotlinweather.R
-import com.example.androidkotlinweather.api.ApiManager
-import com.example.androidkotlinweather.fragments.common.CustomPagerFragment
 import com.example.androidkotlinweather.models.LocalWeatherResponse
+import com.example.androidkotlinweather.models.ResultState
 import com.example.androidkotlinweather.models.getWeatherGroup
 import com.example.androidkotlinweather.persistance.FavoriteCity
 import com.example.androidkotlinweather.persistance.PersistenceManager
 import com.example.androidkotlinweather.prefs.SharedPrefManager
+import com.example.androidkotlinweather.ui.common.CustomPagerFragment
+import com.example.androidkotlinweather.ui.viewmodels.CurrentWeatherViewModel
 import kotlinx.android.synthetic.main.fragment_current_weather.*
 import kotlinx.android.synthetic.main.main_view.view.*
 import kotlinx.coroutines.launch
@@ -25,6 +26,7 @@ class CurrentWeatherFragment(title: String) : CustomPagerFragment(title) {
      * Private Properties
      **/
     private lateinit var persistenceManager: PersistenceManager
+    private var viewModel: CurrentWeatherViewModel = CurrentWeatherViewModel()
 
     /**
      * Override Funcs
@@ -41,6 +43,7 @@ class CurrentWeatherFragment(title: String) : CustomPagerFragment(title) {
         super.onViewCreated(view, savedInstanceState)
 
         initView()
+        initViewModel()
     }
 
     /**
@@ -60,23 +63,36 @@ class CurrentWeatherFragment(title: String) : CustomPagerFragment(title) {
             updateFavoriteImage()
         }
 
-        this.context?.let {
-            ApiManager.requestWeather(SharedPrefManager.getLastCity(it)) { response ->
-                updateView(response)
-            }
-        }
-
         setupDate()
         updateFavoriteImage()
     }
 
+    /// Manage view model live data updates.
+    private fun initViewModel() {
+        this.context?.let { context ->
+            viewModel.requestWeather(SharedPrefManager.getLastCity(context))
+        }
+        viewModel.dataState.observe(viewLifecycleOwner) { resultState ->
+            when (resultState) {
+                is ResultState.Success -> {
+                    updateView(resultState.data)
+                }
+                is ResultState.Error -> {
+                    // TODO: Handle error state
+                    println("test error ${resultState.exception}")
+
+                }
+                is ResultState.Loading -> {
+                    // TODO: Handle loading state
+                    println("test loading")
+                }
+            }
+        }
+    }
+
     /// Called when user has clicked on search button to find weather by its cityname.
     private fun didClickOnCityRequest() {
-        ApiManager.requestWeather(city_field_edit_text.text.toString()) { response ->
-            updateView(
-                response
-            )
-        }
+        viewModel.requestWeather(city_field_edit_text.text.toString())
     }
 
     private fun updateView(response: LocalWeatherResponse) {

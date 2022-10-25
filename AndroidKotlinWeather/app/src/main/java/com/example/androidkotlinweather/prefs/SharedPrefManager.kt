@@ -2,7 +2,6 @@ package com.example.androidkotlinweather.prefs
 
 import android.content.Context
 import android.content.SharedPreferences
-import com.example.androidkotlinweather.fragments.CurrentWeatherFragment
 
 /// Singleton to managed shared preferences.
 object SharedPrefManager {

@@ -1,4 +1,4 @@
-package com.example.androidkotlinweather.fragments.common
+package com.example.androidkotlinweather.ui.common
 import androidx.fragment.app.Fragment
 
 /// Custom fragment used in view pager.

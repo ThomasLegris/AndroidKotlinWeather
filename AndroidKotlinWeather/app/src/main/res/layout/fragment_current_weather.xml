@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.CurrentWeatherFragment">
+    tools:context=".ui.fragments.CurrentWeatherFragment">
 
     <EditText
         android:id="@+id/city_field_edit_text"

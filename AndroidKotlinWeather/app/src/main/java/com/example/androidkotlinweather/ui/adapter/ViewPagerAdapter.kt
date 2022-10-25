@@ -1,10 +1,10 @@
-package com.example.androidkotlinweather.fragments.adapter
+package com.example.androidkotlinweather.ui.adapter
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import com.example.androidkotlinweather.fragments.common.CustomPagerFragment
+import com.example.androidkotlinweather.ui.common.CustomPagerFragment
 
 /// Adapter used to fill the view pager.
 class ViewPagerAdapter(
